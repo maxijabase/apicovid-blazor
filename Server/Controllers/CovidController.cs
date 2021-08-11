@@ -6,6 +6,8 @@ using System.Data.SQLite;
 
 namespace APICovidBlazor.Server.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class CovidController : Controller
     {
         private readonly BECovid _covidHelper;
@@ -21,25 +23,28 @@ namespace APICovidBlazor.Server.Controllers
             return System.IO.File.Exists(@".\Covid19Casos.csv");
         }
 
-        [HttpGet]
-        public ActionResult DescargarDataset()
+        [HttpGet("bajarDataset")]
+        public async Task<ActionResult<bool>> DescargarDataset()
         {
-            _covidHelper.DescargarDataset();
+            await _covidHelper.DescargarDataset();
             return Ok();
         }
 
-        [HttpGet("total")]
-        public ActionResult GetContagios([FromQuery] SearchParams searchParams)
+        [HttpGet("/covid/total")]
+        public ActionResult GetContagios([FromQuery] SearchParamsContagios searchParams)
         {
             var contagios = _covidHelper.ObtenerContagios(searchParams);
             return Ok(contagios);
         }
 
         [HttpGet("deaths")]
-        public async Task<ActionResult> GetMuertes([FromQuery] SearchParams searchParams)
+        public async Task<ActionResult> GetUpdate([FromQuery] SearchParamsUpdate searchParams)
         {
             await Task.Delay(2);
             return Ok();
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult> PostUpdate([FromBody] )
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace APICovidBlazor.Clases.Modelos
 {
-    public class SearchParams
+    public class SearchParamsContagios
     {
         [FromQuery(Name = "desde")]
         public DateTime? Desde { get; set; }
@@ -19,7 +19,7 @@ namespace APICovidBlazor.Clases.Modelos
         [FromQuery(Name = "provincia")]
         public string? Provincia { get; set; }
 
-        public SearchParams()
+        public SearchParamsContagios()
         {
 
         }

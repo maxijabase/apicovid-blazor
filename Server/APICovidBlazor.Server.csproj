@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0-preview.6.21355.2" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.114.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\APICovidBlazor.Clases\APICovidBlazor.Clases.csproj" />
+    <ProjectReference Include="..\Client\APICovidBlazor.Client.csproj" />
+    <ProjectReference Include="..\Shared\APICovidBlazor.Shared.csproj" />
+  </ItemGroup>
+
+
+</Project>

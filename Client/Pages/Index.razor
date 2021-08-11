@@ -1,0 +1,25 @@
+﻿@page "/"
+@using System.IO
+@inject HttpClient Http
+
+<h1>Bienvenido a la consulta de casos de COVID-19</h1>
+
+@if (!DatasetExists)
+{
+    
+  <p>No se encontró el dataset, desea descargarlo?</p>
+  <button>Descargar Dataset</button>
+
+}
+
+
+@code {
+
+    private bool DatasetExists;
+    protected override async Task OnInitializedAsync()
+    {
+        DatasetExists = await Http.GetFromJsonAsync<bool>("/covid/existeDataset");
+    }
+
+
+}

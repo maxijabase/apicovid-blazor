@@ -1,8 +1,7 @@
 ﻿using APICovidBlazor.Clases.Backend;
 using APICovidBlazor.Clases.Modelos;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+using System.Web;
 
 namespace APICovidBlazor.Server.Controllers
 {
@@ -11,34 +10,39 @@ namespace APICovidBlazor.Server.Controllers
     public class CovidController : Controller
     {
         private readonly BECovid _covidHelper;
+        private readonly BEDatos _datosHelper;
         public CovidController(
-            BECovid covidHelper)
+            BECovid covidHelper,
+            BEDatos datosHelper)
         {
             _covidHelper = covidHelper;
+            _datosHelper = datosHelper;
         }
 
         [HttpGet("existeDataset")]
-        public ActionResult<bool> DatasetExists()
+        public ActionResult<ExisteDatasetDTO> DatasetExists()
         {
-            return System.IO.File.Exists(@".\Covid19Casos.csv");
-        }
-
-        [HttpGet("bajarDataset")]
-        public async Task<ActionResult<bool>> DescargarDataset()
-        {
-            await _covidHelper.DescargarDataset();
-            return Ok();
+            var existeDataset = System.IO.File.Exists(@"..\Covid19Casos.csv");
+            if (!existeDataset)
+            {
+                BEDatos.CargarDatosIniciales();
+            }
+            return new ExisteDatasetDTO()
+            {
+                Existe = existeDataset
+            };
         }
 
         [HttpGet("/covid/total")]
-        public ActionResult GetContagios([FromQuery] SearchParamsContagios searchParams)
+        public ActionResult GetContagios()
         {
-            var contagios = _covidHelper.ObtenerContagios(searchParams);
-            return Ok(contagios);
+            var args = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
+            BEDatos.CargarDatosIniciales();
+            return Ok();
         }
 
         [HttpGet("deaths")]
-        public async Task<ActionResult> GetUpdate([FromQuery] SearchParamsUpdate searchParams)
+        public async Task<ActionResult> GetUpdate()
         {
             await Task.Delay(2);
             return Ok();

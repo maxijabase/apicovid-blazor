@@ -4,26 +4,30 @@
 
 <h1>Bienvenido a la consulta de casos de COVID-19</h1>
 
-@if (!DatasetExists)
+@if (DatasetExists == null)
 {
-    
-  <p>No se encontró el dataset, desea descargarlo?</p>
-  <button @onclick="BajarDataset">Descargar Dataset</button>
-
+	<p>Cargando...</p>
+}
+else if ((bool)!DatasetExists)
+{
+	<p>No se encontró el dataset, descárguelo <a href="https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip">aquí</a>, descomprímalo y colóquelo en la raíz de este proyecto.</p>
+}
+else
+{
+	<p>Dataset presente! Se pueden consultar los casos</p>
 }
 
 
 @code {
 
-    private bool DatasetExists;
-    protected override async Task OnInitializedAsync()
-    {
-        DatasetExists = await Http.GetFromJsonAsync<bool>("Covid/existeDataset");
-    }
+	private bool? DatasetExists = null;
+	private bool BajandoDataset = true;
 
-    private async void BajarDataset()
-    {
-        await Http.GetAsync("Covid/bajarDataset");
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var existeDto = await Http.GetFromJsonAsync<ExisteDatasetDTO>("Covid/existeDataset");
+		DatasetExists = existeDto.Existe;
+	}
+
 
 }

@@ -22,8 +22,8 @@ namespace APICovidBlazor.Server.Controllers
         [HttpGet("existeDataset")]
         public ActionResult<ExisteDatasetDTO> DatasetExists()
         {
-            var existeDataset = System.IO.File.Exists(@"..\Covid19Casos.csv");
-            if (!existeDataset)
+            var existeDataset = System.IO.File.Exists(@"..\Covid19Casos.csv") && !System.IO.File.Exists(@"..\Covid19Casos.sqlite");
+            if (existeDataset)
             {
                 BEDatos.CargarDatosIniciales();
             }

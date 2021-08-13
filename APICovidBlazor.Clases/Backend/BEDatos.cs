@@ -13,9 +13,14 @@ namespace APICovidBlazor.Clases.Backend
 {
     public class BEDatos
     {
+
+        private static readonly string[] CamposAInsertar =
+        {
+            "sexo", "edad", "fecha_apertura", "residencia_provincia_nombre"
+        };
+
         public static void CargarDatosIniciales()
         {
-
             CrearSQLDesdeCSV();
             var connection = new SQLiteConnection(@"Data Source=..\Covid19Casos.sqlite;Version=3;");
             using TextReader dataCsvFileReader = File.OpenText(@"..\Covid19Casos.csv");
@@ -30,7 +35,7 @@ namespace APICovidBlazor.Clases.Backend
             {
                 limit++;
                 var dataRecord = dataCsvReader.GetRecord<Covid19Casos>();
-                var drProps = dataRecord.GetType().GetProperties();
+                var drProps = dataRecord.GetType().GetProperties().Where(x => CamposAInsertar.Contains(x.Name.ToLower())).ToArray();
                 insertQuery += "(";
                 for (int i = 0; i < drProps.Length; i++)
                 {
@@ -65,10 +70,11 @@ namespace APICovidBlazor.Clases.Backend
             using CsvReader dataCsvReader = new CsvReader(dataCsvFileReader, config);
             dataCsvReader.Read();
             dataCsvReader.ReadHeader();
-            for (int i = 0; i < dataCsvReader.HeaderRecord.Length; i++)
+            var records = dataCsvReader.HeaderRecord.Where(x => CamposAInsertar.Contains(x)).ToArray();
+            for (int i = 0; i < records.Length; i++)
             {
-                tablesQuery += $"{dataCsvReader.HeaderRecord[i]} varchar";
-                if (i != dataCsvReader.HeaderRecord.Length - 1)
+                tablesQuery += $"{records[i]} varchar";
+                if (i != records.Length - 1)
                 {
                     tablesQuery += ", ";
                 }

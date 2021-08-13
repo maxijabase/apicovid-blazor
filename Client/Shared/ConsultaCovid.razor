@@ -1,0 +1,65 @@
+﻿@using System.Web
+@inject IJSRuntime JsRuntime
+@inject HttpClient Http
+
+<div>
+  <p>Ingrese la edad o rango de edades (formato edad-edad, ejemplos: 10-50 30-40 15-25)</p>
+  <input type="number" @bind-value="Edades" />
+</div>
+<hr>
+<div>
+  <p>Indique sexo</p>
+  <input type="checkbox" @bind="M" />M
+  <input type="checkbox" @bind="F" />F
+</div>
+<hr>
+<div>
+  <p>Indique fechas</p>
+  <p>Desde</p>
+  <input type="date" @bind="Desde" />
+  <br />
+  <p>Hasta</p>
+  <input type="date" @bind="Hasta" />
+</div>
+<hr>
+<div>
+  <p>Indique provincia</p>
+  <input type="text" placeholder="Respete tildes" @bind="Provincia" />
+</div>
+
+<ul>
+  <li>@Edades</li>
+</ul>
+
+<button @onclick="ConsultarDatos">Consultar</button>
+
+@code {
+
+    public string Edades;
+    public bool M;
+    public bool F;
+    public DateTime Desde;
+    public DateTime Hasta;
+    public string Provincia;
+
+    private async void ConsultarDatos()
+    {
+      var consulta = new ConsultaDTO
+      {
+        Edades = Edades,
+        Masculino = M,
+        Femenino = F,
+        Desde = Desde,
+        Hasta = Hasta,
+        Provincia = Provincia
+      };
+
+      var properties = from p in consulta.GetType().GetProperties()
+                       where p.GetValue(consulta, null) != null
+                       select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(consulta, null).ToString());
+
+      string queryString = string.Join("&", properties.ToArray());
+      var consultaDTO = await Http.GetFromJsonAsync<ConsultaDTO>($"Covid/total?{queryString}");
+    }
+
+}

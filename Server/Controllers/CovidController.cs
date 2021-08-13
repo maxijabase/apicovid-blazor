@@ -1,6 +1,7 @@
 ﻿using APICovidBlazor.Clases.Backend;
 using APICovidBlazor.Clases.Modelos;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace APICovidBlazor.Server.Controllers
@@ -10,20 +11,17 @@ namespace APICovidBlazor.Server.Controllers
     public class CovidController : Controller
     {
         private readonly BECovid _covidHelper;
-        private readonly BEDatos _datosHelper;
         public CovidController(
-            BECovid covidHelper,
-            BEDatos datosHelper)
+            BECovid covidHelper)
         {
             _covidHelper = covidHelper;
-            _datosHelper = datosHelper;
         }
 
         [HttpGet("existeDataset")]
         public ActionResult<ExisteDatasetDTO> DatasetExists()
         {
-            var existeDataset = System.IO.File.Exists(@"..\Covid19Casos.csv") && !System.IO.File.Exists(@"..\Covid19Casos.sqlite");
-            if (existeDataset)
+            var existeDataset = System.IO.File.Exists(@"..\Covid19Casos.csv");
+            if (existeDataset && !System.IO.File.Exists(@"..\Covid19Casos.sqlite"))
             {
                 BEDatos.CargarDatosIniciales();
             }
@@ -33,11 +31,11 @@ namespace APICovidBlazor.Server.Controllers
             };
         }
 
-        [HttpGet("/covid/total")]
+        [HttpGet("total")]
         public ActionResult GetContagios()
         {
             var args = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
-            BEDatos.CargarDatosIniciales();
+            _covidHelper.ObtenerContagios(args);
             return Ok();
         }
 
@@ -48,7 +46,5 @@ namespace APICovidBlazor.Server.Controllers
             return Ok();
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> PostUpdate([FromBody] )
     }
 }

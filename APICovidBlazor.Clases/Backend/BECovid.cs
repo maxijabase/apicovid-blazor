@@ -18,15 +18,10 @@ namespace APICovidBlazor.Clases.Backend
 {
     public class BECovid
     {
-        private readonly BEDatos _datosHelper;
-
-        public BECovid(
-            BEDatos datosHelper)
+        public int ObtenerContagios(NameValueCollection args)
         {
-            _datosHelper = datosHelper;
+
+            return 1;
         }
-
-
-
     }
 }

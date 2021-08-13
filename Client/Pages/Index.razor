@@ -6,28 +6,33 @@
 
 @if (DatasetExists == null)
 {
-	<p>Cargando...</p>
+  <p>Cargando...</p>
 }
 else if ((bool)!DatasetExists)
 {
-	<p>No se encontró el dataset, descárguelo <a href="https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip">aquí</a>, descomprímalo y colóquelo en la raíz de este proyecto.</p>
+  <p>No se encontró el dataset, descárguelo <a href="https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip">aquí</a>, descomprímalo y colóquelo en la raíz de este proyecto.</p>
 }
 else
 {
-	<p>Dataset presente! Se pueden consultar los casos</p>
+  <p>Dataset presente! Se pueden consultar los casos</p>
+
+  <h2>Consultar Datos</h2>
+  <ConsultaCovid />
+
+  <h2>Ingreso Datos</h2>
 }
 
 
 @code {
 
-	private bool? DatasetExists = null;
-	private bool BajandoDataset = true;
+  private bool? DatasetExists = null;
+  private bool BajandoDataset = true;
 
-	protected override async Task OnInitializedAsync()
-	{
-		var existeDto = await Http.GetFromJsonAsync<ExisteDatasetDTO>("Covid/existeDataset");
-		DatasetExists = existeDto.Existe;
-	}
+  protected override async Task OnInitializedAsync()
+  {
+    var existeDto = await Http.GetFromJsonAsync<ExisteDatasetDTO>("Covid/existeDataset");
+    DatasetExists = existeDto.Existe;
+  }
 
 
 }

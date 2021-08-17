@@ -20,6 +20,14 @@ namespace APICovidBlazor.Clases.Backend
             "sexo", "edad", "fecha_apertura", "residencia_provincia_nombre"
         };
 
+        private static readonly Dictionary<string, string> RecordType = new()
+        {
+            { "sexo", "varchar" },
+            { "edad", "integer" },
+            { "fecha_apertura", "text" },
+            { "residencia_provincia_nombre", "varchar" },
+        };
+
         public static void CargarDatosIniciales()
         {
             CrearSQLDesdeCSV();
@@ -74,7 +82,7 @@ namespace APICovidBlazor.Clases.Backend
             var records = dataCsvReader.HeaderRecord.Where(x => CamposAInsertar.Contains(x)).ToArray();
             for (int i = 0; i < records.Length; i++)
             {
-                tablesQuery += $"{records[i]} varchar";
+                tablesQuery += $"{records[i]} {RecordType[records[i]]}";
                 if (i != records.Length - 1)
                 {
                     tablesQuery += ", ";

@@ -1,65 +1,65 @@
-﻿@using System.Web
-@inject IJSRuntime JsRuntime
-@inject HttpClient Http
+﻿@inject HttpClient Http
 
 <div>
-  <p>Ingrese la edad o rango de edades (formato edad-edad, ejemplos: 10-50 30-40 15-25)</p>
-  <input type="number" @bind-value="Edades" />
+	<p>Ingrese la edad o rango de edades (formato edad-edad, ejemplos: 10-50 30-40 15-25)</p>
+	<input type="text" @bind-value="Edades" />
 </div>
 <hr>
 <div>
-  <p>Indique sexo</p>
-  <input type="checkbox" @bind="M" />M
-  <input type="checkbox" @bind="F" />F
+	<p>Indique sexo</p>
+	<input type="checkbox" @bind="M" />M
+	<input type="checkbox" @bind="F" />F
 </div>
 <hr>
 <div>
-  <p>Indique fechas</p>
-  <p>Desde</p>
-  <input type="date" @bind="Desde" />
-  <br />
-  <p>Hasta</p>
-  <input type="date" @bind="Hasta" />
+	<p>Indique fechas (dejar como está si no quiere especificar ningún límite de fechas)</p>
+	<p>Desde</p>
+	<input type="date" @bind="Desde" />
+	<br />
+	<p>Hasta</p>
+	<input type="date" @bind="Hasta" />
 </div>
 <hr>
 <div>
-  <p>Indique provincia</p>
-  <input type="text" placeholder="Respete tildes" @bind="Provincia" />
+	<p>Indique provincia</p>
+	<input type="text" placeholder="Respete tildes" @bind="Provincia" />
 </div>
-
-<ul>
-  <li>@Edades</li>
-</ul>
+<br />
+<br />
+<h1>Contagiados: @(resDto.Contagios)</h1>
 
 <button @onclick="ConsultarDatos">Consultar</button>
 
 @code {
 
-    public string Edades;
-    public bool M;
-    public bool F;
-    public DateTime Desde;
-    public DateTime Hasta;
-    public string Provincia;
+	public string Edades;
+	public bool M;
+	public bool F;
+	public DateTime Desde = default;
+	public DateTime Hasta = default;
+	public string Provincia;
 
-    private async void ConsultarDatos()
-    {
-      var consulta = new ConsultaDTO
-      {
-        Edades = Edades,
-        Masculino = M,
-        Femenino = F,
-        Desde = Desde,
-        Hasta = Hasta,
-        Provincia = Provincia
-      };
+	public RespuestaConsultaDTO resDto = new();
 
-      var properties = from p in consulta.GetType().GetProperties()
-                       where p.GetValue(consulta, null) != null
-                       select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(consulta, null).ToString());
+	private async void ConsultarDatos()
+	{
+		var consulta = new ConsultaDTO
+		{
+			Edades = Edades,
+			Masculino = M,
+			Femenino = F,
+			Desde = Desde,
+			Hasta = Hasta,
+			Provincia = Provincia
+		};
 
-      string queryString = string.Join("&", properties.ToArray());
-      var consultaDTO = await Http.GetFromJsonAsync<ConsultaDTO>($"Covid/total?{queryString}");
-    }
+		var properties = from p in consulta.GetType().GetProperties()
+							where p.GetValue(consulta, null) != null
+							select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(consulta, null).ToString());
+
+		string queryString = string.Join("&", properties.ToArray());
+		var res = await Http.GetFromJsonAsync<RespuestaConsultaDTO>($"Covid/total?{queryString}");
+		resDto = res;
+	}
 
 }

@@ -1,4 +1,5 @@
 using APICovidBlazor.Clases.Backend;
+using APICovidBlazor.Clases.Entidades;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,7 @@ namespace APICovidBlazor.Server
             services.AddRazorPages();
 
             services.AddTransient<BECovid>();
+            services.AddTransient<Covid19CasosContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

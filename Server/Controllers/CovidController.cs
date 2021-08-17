@@ -32,11 +32,11 @@ namespace APICovidBlazor.Server.Controllers
         }
 
         [HttpGet("total")]
-        public ActionResult GetContagios()
+        public async Task<ActionResult<RespuestaConsultaDTO>> GetContagios()
         {
             var args = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
-            _covidHelper.ObtenerContagios(args);
-            return Ok();
+            var response = await _covidHelper.ObtenerContagios(args);
+            return Ok(response);
         }
 
         [HttpGet("deaths")]

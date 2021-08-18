@@ -11,5 +11,6 @@ namespace APICovidBlazor.Clases.Entidades
         public long? Edad { get; set; }
         public string ResidenciaProvinciaNombre { get; set; }
         public string FechaApertura { get; set; }
+        public string Fallecido { get; set; }
     }
 }

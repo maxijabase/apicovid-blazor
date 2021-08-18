@@ -39,6 +39,10 @@ namespace APICovidBlazor.Clases.Entidades
                     .HasColumnType("integer")
                     .HasColumnName("edad");
 
+                entity.Property(e => e.Fallecido)
+                    .HasColumnType("varchar")
+                    .HasColumnName("fallecido");
+
                 entity.Property(e => e.FechaApertura)
                     .HasColumnType("text")
                     .HasColumnName("fecha_apertura");

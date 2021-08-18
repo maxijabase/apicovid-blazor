@@ -17,7 +17,7 @@ namespace APICovidBlazor.Clases.Backend
 
         private static readonly string[] CamposAInsertar =
         {
-            "sexo", "edad", "fecha_apertura", "residencia_provincia_nombre"
+            "sexo", "edad", "fecha_apertura", "residencia_provincia_nombre", "fallecido"
         };
 
         private static readonly Dictionary<string, string> RecordType = new()
@@ -26,6 +26,7 @@ namespace APICovidBlazor.Clases.Backend
             { "edad", "integer" },
             { "fecha_apertura", "text" },
             { "residencia_provincia_nombre", "varchar" },
+            { "fallecido", "varchar" },
         };
 
         public static void CargarDatosIniciales()

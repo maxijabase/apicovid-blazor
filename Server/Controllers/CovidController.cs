@@ -35,15 +35,16 @@ namespace APICovidBlazor.Server.Controllers
         public async Task<ActionResult<RespuestaConsultaDTO>> GetContagios()
         {
             var args = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
-            var response = await _covidHelper.ObtenerContagios(args);
+            var response = await _covidHelper.ObtenerCasos(args);
             return Ok(response);
         }
 
         [HttpGet("deaths")]
-        public async Task<ActionResult> GetUpdate()
+        public async Task<ActionResult> GetMuertes()
         {
-            await Task.Delay(2);
-            return Ok();
+            var args = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
+            var response = await _covidHelper.ObtenerCasos(args, true);
+            return Ok(response);
         }
 
     }

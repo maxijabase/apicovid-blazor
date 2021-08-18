@@ -28,7 +28,7 @@ namespace APICovidBlazor.Clases.Backend
             _context = context;
         }
 
-        public async Task<RespuestaConsultaDTO> ObtenerContagios(NameValueCollection args)
+        public async Task<RespuestaConsultaDTO> ObtenerCasos(NameValueCollection args, bool muertes = false)
         {
             var resp = new RespuestaConsultaDTO();
             var cons = new ConsultaDTO(args);
@@ -72,7 +72,12 @@ namespace APICovidBlazor.Clases.Backend
                 query = query.Where(x => x.ResidenciaProvinciaNombre == cons.Provincia);
             }
 
-            resp.Contagios = query.ToList().Count;
+            if (muertes)
+            {
+                query = query.Where(x => x.Fallecido == "SI");
+            }
+
+            resp.Casos = query.ToList().Count;
 
             return resp;
         }

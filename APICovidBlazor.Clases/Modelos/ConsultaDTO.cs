@@ -26,8 +26,8 @@ namespace APICovidBlazor.Clases.Modelos
             Edades = args["edades"] ?? string.Empty;
             Masculino = bool.Parse(args["masculino"] ?? "false");
             Femenino = bool.Parse(args["femenino"] ?? "false");
-            Desde = DateTime.Parse(args["desde"]);
-            Hasta = DateTime.Parse(args["hasta"]);
+            Desde = DateTime.Parse(args["desde"] ?? "0001-01-01");
+            Hasta = DateTime.Parse(args["hasta"] ?? "0001-01-01");
             Provincia = args["provincia"] ?? string.Empty;
         }
     }

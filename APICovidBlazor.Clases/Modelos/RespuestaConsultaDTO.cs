@@ -8,11 +8,11 @@ namespace APICovidBlazor.Clases.Modelos
 {
     public class RespuestaConsultaDTO
     {
-        public int Contagios {  get; set; }
+        public int Casos { get; set; }
 
         public RespuestaConsultaDTO()
         {
-            Contagios = 0;
+            Casos = 0;
         }
     }
 }

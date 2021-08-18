@@ -1,0 +1,22 @@
+﻿@page "/ingresar"
+
+@if (ExisteDataset)
+{
+	<ConsultaCovid Tipo="ConsultaCovid.TipoConsulta.Muertes" />
+}
+else
+{
+	<CheckearDataset DatasetExiste="DatasetExiste" />
+}
+
+
+@code {
+
+	public bool ExisteDataset = false;
+
+	private void DatasetExiste(bool existe)
+	{
+		ExisteDataset = existe;
+	}
+
+} 

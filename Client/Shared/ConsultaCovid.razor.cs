@@ -11,6 +11,21 @@ namespace APICovidBlazor.Client.Shared
 {
     public partial class ConsultaCovid
     {
+
+        private static Dictionary<TipoConsulta, string> Titulo = new()
+        {
+            { TipoConsulta.Contagios, "Consultar contagios"},
+            { TipoConsulta.Muertes, "Consultar muertes"},
+            { TipoConsulta.Ingreso, "Ingresar caso"}
+        };
+
+        private static Dictionary<TipoConsulta, string> Respuesta = new()
+        {
+            { TipoConsulta.Contagios, "Contagios: " },
+            { TipoConsulta.Muertes, "Muertes: " },
+            { TipoConsulta.Ingreso, string.Empty }
+        };
+
         [Parameter] public TipoConsulta Tipo { get; set; } 
         public string Edades;
         public bool M;
@@ -45,7 +60,7 @@ namespace APICovidBlazor.Client.Shared
 
         public enum TipoConsulta
         {
-            Contagios, Muertes
+            Contagios, Muertes, Ingreso
         }
     }
 }

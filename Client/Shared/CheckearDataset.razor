@@ -1,0 +1,33 @@
+﻿@inject HttpClient Http
+
+@if (DatasetExists == null)
+{
+	<p>Cargando...</p>
+}
+else if ((bool)!DatasetExists)
+{
+	<p>No se encontró el dataset, descárguelo <a href="https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip">aquí</a>, 
+		descomprímalo y colóquelo en la raíz de este proyecto.</p>
+}
+else
+{
+	<p>Dataset presente! Se pueden consultar los casos</p>
+}
+
+
+@code {
+
+	[Parameter] public EventCallback<bool> DatasetExiste { get; set; }
+
+	private bool? DatasetExists = null;
+	private bool BajandoDataset = true;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var existeDto = await Http.GetFromJsonAsync<ExisteDatasetDTO>("Covid/existeDataset");
+		DatasetExists = existeDto.Existe;
+		await DatasetExiste.InvokeAsync((bool)DatasetExists);
+	}
+
+
+}

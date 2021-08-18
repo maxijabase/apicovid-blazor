@@ -1,7 +1,7 @@
 ﻿@using System.Threading
 @inject HttpClient Http
 
-<h1>Consulta @(Tipo == TipoConsulta.Contagios ? "Contagios" : "Muertes")</h1>
+<h1>@Titulo[Tipo]</h1>
 
 <div>
 	<p>Ingrese la edad o rango de edades (formato edad-edad, ejemplos: 10-50 30-40 15-25)</p>
@@ -29,6 +29,9 @@
 </div>
 <br />
 <br />
-<h1>@(Tipo == TipoConsulta.Contagios ? "Contagiados" : "Muertos"): @Casos</h1>
+@if (Tipo != TipoConsulta.Ingreso)
+{
+	<h1>@(Tipo == TipoConsulta.Contagios ? "Contagiados" : "Muertos"): @Casos</h1>
+}
 
 <button @onclick="ConsultarDatos">Consultar</button>

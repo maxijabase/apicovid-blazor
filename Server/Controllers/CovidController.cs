@@ -47,5 +47,11 @@ namespace APICovidBlazor.Server.Controllers
             return Ok(response);
         }
 
+        [HttpPost("update")]
+        public async Task<ActionResult<RespuestaIngresoDTO>> PostCaso([FromBody] IngresoDTO ingreso)
+        {
+            var response = await _covidHelper.IngresarCaso(ingreso);
+            return Ok(response);
+        }
     }
 }

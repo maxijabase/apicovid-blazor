@@ -33,54 +33,91 @@ namespace APICovidBlazor.Clases.Backend
             var resp = new RespuestaConsultaDTO();
             var cons = new ConsultaDTO(args);
 
-            var query = from caso in await _context.Casoscovids.ToListAsync()
-                        select caso;
-
-            if (!string.IsNullOrEmpty(cons.Edades))
+            try
             {
-                if (cons.Edades.Contains('-'))
+                var query = from caso in await _context.Casoscovids.ToListAsync()
+                            select caso;
+
+                if (!string.IsNullOrEmpty(cons.Edades))
                 {
-                    var edades = cons.Edades.Split('-');
-                    query = query.Where(x => x.Edad > int.Parse(edades[0]) && x.Edad < int.Parse(edades[1]));
+                    if (cons.Edades.Contains('-'))
+                    {
+                        var edades = cons.Edades.Split('-');
+                        query = query.Where(x => x.Edad > int.Parse(edades[0]) && x.Edad < int.Parse(edades[1]));
+                    }
+                    else
+                    {
+                        query = query.Where(x => x.Edad == int.Parse(cons.Edades));
+                    }
                 }
-                else
+
+                if (cons.Desde != default)
                 {
-                    query = query.Where(x => x.Edad == int.Parse(cons.Edades));
+                    query = query.Where(x => DateTime.Parse(x.FechaApertura) > cons.Desde);
                 }
-            }
+                if (cons.Hasta != default)
+                {
+                    query = query.Where(x => DateTime.Parse(x.FechaApertura) < cons.Hasta);
+                }
 
-            if (cons.Desde != default)
-            {
-                query = query.Where(x => DateTime.Parse(x.FechaApertura) > cons.Desde);
-            }
-            if (cons.Hasta != default)
-            {
-                query = query.Where(x => DateTime.Parse(x.FechaApertura) < cons.Hasta);
-            }
+                if (cons.Masculino)
+                {
+                    query = query.Where(x => x.Sexo == "M");
+                }
+                if (cons.Femenino)
+                {
+                    query = query.Where(x => x.Sexo == "F");
+                }
 
-            if (cons.Masculino)
-            {
-                query = query.Where(x => x.Sexo == "M");
-            }
-            if (cons.Femenino)
-            {
-                query = query.Where(x => x.Sexo == "F");
-            }
+                if (!string.IsNullOrEmpty(cons.Provincia))
+                {
+                    query = query.Where(x => x.ResidenciaProvinciaNombre == cons.Provincia);
+                }
 
-            if (!string.IsNullOrEmpty(cons.Provincia))
-            {
-                query = query.Where(x => x.ResidenciaProvinciaNombre == cons.Provincia);
+                if (muertes)
+                {
+                    query = query.Where(x => x.Fallecido == "SI");
+                }
+
+                resp.Casos = query.ToList().Count;
+
+                return resp;
             }
-
-            if (muertes)
+            catch (Exception)
             {
-                query = query.Where(x => x.Fallecido == "SI");
+                throw;
             }
-
-            resp.Casos = query.ToList().Count;
-
-            return resp;
         }
-       
+
+        public async Task<RespuestaIngresoDTO> IngresarCaso(IngresoDTO ingreso)
+        {
+            var resp = new RespuestaIngresoDTO();
+
+            try
+            {
+                var caso = new Casoscovid()
+                {
+                    Edad = ingreso.Edad,
+                    FechaApertura = ingreso.Fecha.ToString("yyyy-MM-dd"),
+                    ResidenciaProvinciaNombre = ingreso.Provincia,
+                    Sexo = ingreso.Sexo.Substring(0, 1),
+                    Fallecido = ingreso.Fallecido ? "SI" : "NO",
+                    IdEventoCaso = _context.Casoscovids.Max(x => x.IdEventoCaso) + 1,
+                };
+
+                await _context.Casoscovids.AddAsync(caso);
+                await _context.SaveChangesAsync();
+                resp.Exito = true;
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                resp.Exito = false;
+                resp.Error = ex.Message;
+                return resp;
+            }
+
+        }
+
     }
 }

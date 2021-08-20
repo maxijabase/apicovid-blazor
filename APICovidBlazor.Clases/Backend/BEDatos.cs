@@ -17,7 +17,12 @@ namespace APICovidBlazor.Clases.Backend
 
         private static readonly string[] CamposAInsertar =
         {
-            "sexo", "edad", "fecha_apertura", "residencia_provincia_nombre", "fallecido"
+            "id_evento_caso", 
+            "sexo", 
+            "edad", 
+            "fecha_apertura", 
+            "residencia_provincia_nombre", 
+            "fallecido"
         };
 
         private static readonly Dictionary<string, string> RecordType = new()
@@ -27,6 +32,7 @@ namespace APICovidBlazor.Clases.Backend
             { "fecha_apertura", "text" },
             { "residencia_provincia_nombre", "varchar" },
             { "fallecido", "varchar" },
+            { "id_evento_caso", "integer" },
         };
 
         public static void CargarDatosIniciales()
@@ -90,7 +96,7 @@ namespace APICovidBlazor.Clases.Backend
                 }
                 else
                 {
-                    tablesQuery += ");";
+                    tablesQuery += ", PRIMARY KEY(id_evento_caso));";
                 }
             }
             connection.Open();

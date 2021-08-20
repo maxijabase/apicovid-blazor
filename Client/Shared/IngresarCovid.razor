@@ -1,0 +1,52 @@
+﻿@inject HttpClient Http
+
+<h1>Ingreso Caso</h1>
+
+<div>
+	<p>Ingrese la edad</p>
+	<input type="text" @bind="Edad" />
+</div>
+<hr>
+<div>
+	<p>Indique sexo</p>
+	<select name="Sexo" @onchange="SexoCambio">
+		<option value="Masculino">Masculino</option>
+		<option value="Femenino">Femenino</option>
+	</select>
+</div>
+<hr>
+<div>
+	<p>Indique fecha</p>
+	<input type="date" @bind="Fecha" />
+</div>
+<hr>
+<div>
+	<p>Indique provincia</p>
+	<input type="text" placeholder="Respete tildes" @bind="Provincia" />
+</div>
+<hr>
+<div>
+	<p>¿Falleció?</p>
+	<input type="checkbox" @bind="Fallecido" />
+</div>
+<br />
+@if (Enviando)
+{
+
+}
+else
+{
+	if (DatosErroneos)
+	{
+		<p style="color:red;">Revise que todos los campos contengan información válida</p>
+	}
+	else if (PeticionErronea)
+	{
+		<p style="color:red;">Error al ingresar un caso nuevo: @(MensajeError)"</p>
+	}
+	else
+	{
+		<p style="color:green;">Datos ingresados correctamente</p>
+	}
+}
+<button @onclick="IngresarDatos">Ingresar</button>

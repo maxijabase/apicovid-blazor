@@ -7,6 +7,7 @@ namespace APICovidBlazor.Clases.Entidades
 {
     public partial class Casoscovid
     {
+        public long IdEventoCaso { get; set; }
         public string Sexo { get; set; }
         public long? Edad { get; set; }
         public string ResidenciaProvinciaNombre { get; set; }

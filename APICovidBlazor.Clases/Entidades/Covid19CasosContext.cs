@@ -31,9 +31,14 @@ namespace APICovidBlazor.Clases.Entidades
         {
             modelBuilder.Entity<Casoscovid>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IdEventoCaso);
 
                 entity.ToTable("casoscovid");
+
+                entity.Property(e => e.IdEventoCaso)
+                    .HasColumnType("integer")
+                    .ValueGeneratedNever()
+                    .HasColumnName("id_evento_caso");
 
                 entity.Property(e => e.Edad)
                     .HasColumnType("integer")
